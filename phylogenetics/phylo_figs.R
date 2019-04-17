@@ -1,4 +1,4 @@
-# phylogeny and sequences
+# phylogeny and sequences ----
 
 library(ape)
 library(phangorn)
@@ -36,4 +36,26 @@ for(i in 1:nrow(s)) {
     }
 }
 
+dev.off()
+
+
+
+# likelihood maximization ----
+
+library(MASS)
+library(viridis)
+x <- rnorm(1000)
+y <- rnorm(length(x))
+z <- kde2d(x, y)$z
+
+colz <- viridis(100)
+zFacetCenter <- (z[-1, -1] + z[-1, -ncol(z)] + z[-nrow(z), -1] + z[-nrow(z), -ncol(z)])/4
+zFacetRange<-cut(zFacetCenter, length(colz))
+
+pdf('phylogenetics/fig_lik_surface.pdf', width = 4, height = 4)
+par(mar = rep(0, 4))
+persp(z, 
+      theta = -40, phi = 30, expand = 3, scale = FALSE,
+      shade = NA, col = colz[zFacetRange], border = 'grey',
+      zlim = c(0.01, 0.06), box=FALSE)
 dev.off()
