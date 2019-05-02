@@ -190,3 +190,20 @@ dev.off()
 
 # fitness landscape ----
 
+library(MASS)
+library(viridis)
+x <- c(rnorm(50), rnorm(30, -2, 0.5), rnorm(70, 1, 0.5))
+y <- c(rnorm(60, -1, 0.5), rnorm(50, 2, 0.5), rnorm(40, 0, 0.1))
+z <- kde2d(x, y)$z
+
+colz <- viridis(100)
+zFacetCenter <- (z[-1, -1] + z[-1, -ncol(z)] + z[-nrow(z), -1] + z[-nrow(z), -ncol(z)])/4
+zFacetRange<-cut(zFacetCenter, length(colz))
+
+pdf('evol-thr/fig_fitness_lscape.pdf', width = 5, height = 5)
+par(mar = rep(0, 4))
+persp(z, 
+      theta = -60, phi = 30, expand = 3, scale = FALSE,
+      shade = NA, col = colz[zFacetRange], border = 'grey',
+      zlim = c(0.01, 0.06), box=FALSE)
+dev.off()
